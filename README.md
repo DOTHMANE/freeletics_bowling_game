@@ -1,24 +1,45 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project contains the Freeletics bowling game app. This is a Ruby on Rails 7 project.
 
-Things you may want to cover:
+The api contains endpoints to create a game, roll a game and get the score of the game
 
-* Ruby version
+  ```sh
+create_game POST /games(.:format)  games#create
+roll_game POST /games/:id/roll(.:format)  games#roll
+score_game GET  /games/:id/score(.:format) games#score
+  ```
 
-* System dependencies
+You need:
+* Docker & docker-compose
+* Ruby 3.3.0
 
-* Configuration
+## Build the environment
 
-* Database creation
+  ```sh
+  docker-compose build
+  ```
 
-* Database initialization
+## Database creation
 
-* How to run the test suite
+  ```sh
+  docker-compose run backend bundle exec rake db:setup
+  ```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Start the environment
 
-* Deployment instructions
+  ```sh
+  docker-compose up
+  ```
 
-* ...
+## Working with the Rails container
+
+  ```sh
+  docker-compose exec backend bash
+  ```
+
+## Tests
+
+  ```sh
+  rspec
+  ```
