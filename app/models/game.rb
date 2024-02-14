@@ -22,8 +22,6 @@ class Game < ApplicationRecord
     frames.sum(:score)
   end
 
-  private
-
   # Method to get the current frame of the game
   def get_current_frame
     last_frame = frames.last
