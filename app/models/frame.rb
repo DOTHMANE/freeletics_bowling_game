@@ -20,18 +20,18 @@ class Frame < ApplicationRecord
   # Method to handle logic for the first ball of the frame
   def handle_first_ball(knocked_pins)
     validate_knocked_pins(knocked_pins, true)
-    if knocked_pins == 10
-      update(throw_type: :strike, bonus_ball: 2)
-      increment!(:throws, -1) unless is_last_frame?
-    end
+    return unless knocked_pins == 10
+
+    update(throw_type: :strike, bonus_ball: 2)
+    increment!(:throws, -1) unless is_last_frame?
   end
 
   # Method to handle logic for the second ball of the frame
   def handle_second_ball(knocked_pins)
     validate_knocked_pins(knocked_pins, false)
-    if knocked_pins + score == 10
-      update(throw_type: :spare, bonus_ball: 1)
-    end
+    return unless knocked_pins + score == 10
+
+    update(throw_type: :spare, bonus_ball: 1)
   end
 
   # Method to increment throw counters and update score
@@ -47,15 +47,18 @@ class Frame < ApplicationRecord
 
     update_score_of_previous_frame(previous_frame, knocked_pins)
 
-    update_score_of_previous_frame(get_previous_frame(previous_frame), knocked_pins) unless previous_frame.is_first_frame?
+    return if previous_frame.is_first_frame?
+
+    update_score_of_previous_frame(get_previous_frame(previous_frame),
+                                   knocked_pins)
   end
 
   # Method to update the score of the previous frame with bonus points
   def update_score_of_previous_frame(previous_frame, knocked_pins)
-    if previous_frame.bonus_ball.positive?
-      previous_frame.decrement!(:bonus_ball)
-      previous_frame.increment!(:score, knocked_pins)
-    end
+    return unless previous_frame.bonus_ball.positive?
+
+    previous_frame.decrement!(:bonus_ball)
+    previous_frame.increment!(:score, knocked_pins)
   end
 
   # Method to get the previous frame
@@ -91,14 +94,12 @@ class Frame < ApplicationRecord
       unless knocked_pins.between?(0, 10)
         raise ArgumentError, 'Number of knocked pins must be between 0 and 10 for the first ball'
       end
+    elsif is_last_frame?
+      validate_last_frame_pins(knocked_pins)
     else
-      if is_last_frame?
-        validate_last_frame_pins(knocked_pins)
-      else
-        rest_pins = 10 - score
-        unless knocked_pins.between?(0, rest_pins)
-          raise ArgumentError, 'Number of knocked pins must be between 0 and remaining pins'
-        end
+      rest_pins = 10 - score
+      unless knocked_pins.between?(0, rest_pins)
+        raise ArgumentError, 'Number of knocked pins must be between 0 and remaining pins'
       end
     end
   end
