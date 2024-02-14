@@ -1,0 +1,19 @@
+version: "3"
+services:
+  # Backend
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/freeletics_case_bowling :delegated
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
