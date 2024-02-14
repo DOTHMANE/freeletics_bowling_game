@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_152134) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.integer "current_frame"
+    t.integer "current_frame", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
