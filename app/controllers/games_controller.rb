@@ -28,5 +28,7 @@ class GamesController < ApplicationController
   # Set the current game instance
   def set_game
     @game = Game.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 end
