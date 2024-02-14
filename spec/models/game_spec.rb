@@ -12,7 +12,7 @@ RSpec.describe Game, type: :model do
         expect(game.current_frame).to eq(0)
         game.roll(5)
         game.roll(5)
-        expect(game.current_frame).to eq(1) # No increment since the frame is not finished
+        expect(game.current_frame).to eq(1)
       end
     end
 
